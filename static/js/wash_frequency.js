@@ -1,92 +1,59 @@
-// **
-//  * BONUS Solution
-//  * */
-function buildGauge(wfreq) {
-    // Enter the washing frequency between 0 and 180
-    let level = parseFloat(wfreq) * 20;
-  
-    // Trig to calc meter point
-    let degrees = 180 - level;
-    let radius = 0.5;
-    let radians = (degrees * Math.PI) / 180;
-    let x = radius * Math.cos(radians);
-    let y = radius * Math.sin(radians);
-  
-    // Path: may have to change to create a better triangle
-    let mainPath = "M -.0 -0.05 L .0 0.05 L ";
-    let pathX = String(x);
-    let space = " ";
-    let pathY = String(y);
-    let pathEnd = " Z";
-    let path = mainPath.concat(pathX, space, pathY, pathEnd);
-  
-    let data = [
-      {
-        type: "scatter",
-        x: [0],
-        y: [0],
-        marker: { size: 12, color: "850000" },
-        showlegend: false,
-        name: "Freq",
-        text: level,
-        hoverinfo: "text+name"
-      },
-      {
-        values: [50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50 / 9, 50],
-        rotation: 90,
-        text: ["8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1", ""],
-        textinfo: "text",
-        textposition: "inside",
-        marker: {
-          colors: [
-            "rgba(0, 105, 11, .5)",
-            "rgba(10, 120, 22, .5)",
-            "rgba(14, 127, 0, .5)",
-            "rgba(110, 154, 22, .5)",
-            "rgba(170, 202, 42, .5)",
-            "rgba(202, 209, 95, .5)",
-            "rgba(210, 206, 145, .5)",
-            "rgba(232, 226, 202, .5)",
-            "rgba(240, 230, 215, .5)",
-            "rgba(255, 255, 255, 0)"
-          ]
+// Bonus work
+// wash_frequency.js loaded from index.html
+// Build gauge chart -- <div id="gauge" class="js-plotly-plot">
+function buildGaugeChart(sample) {
+
+    // Retrieve all metadata
+    let metadata = allData.metadata;
+
+    // Filter based on the value of the sample
+    let value = metadata.filter(result => result.id == sample);
+
+    // Log the array of metadata objects after the have been filtered
+    console.log(value)
+
+    // Get the first index from the array
+    let valueData = value[0];
+
+    // Use Object.entries to get the key/value pairs and put into the demographics box on the page
+    let washFrequency = Object.values(valueData)[6];
+
+    // Set up the trace for the gauge chart
+    let trace2 = {
+        value: washFrequency,
+        domain: {x: [0,1], y: [0,1]},
+        title: {
+            text: "<b>Belly Button Washing Frequency</b><br>Scrubs per Week",
+            font: {color: "black", size: 16}
         },
-        labels: ["8-9", "7-8", "6-7", "5-6", "4-5", "3-4", "2-3", "1-2", "0-1", ""],
-        hoverinfo: "label",
-        hole: 0.5,
-        type: "pie",
-        showlegend: false
-      }
-    ];
-  
-    let layout = {
-      shapes: [
-        {
-          type: "path",
-          path: path,
-          fillcolor: "850000",
-          line: {
-            color: "850000"
-          }
-        }
-      ],
-      title: "<b>Belly Button Washing Frequency</b> <br> Scrubs per Week",
-      height: 500,
-      width: 500,
-      xaxis: {
-        zeroline: false,
-        showticklabels: false,
-        showgrid: false,
-        range: [-1, 1]
-      },
-      yaxis: {
-        zeroline: false,
-        showticklabels: false,
-        showgrid: false,
-        range: [-1, 1]
-      }
+        type: "indicator",
+        mode: "gauge+number",
+        gauge: {
+            axis: {range: [0,10], tickmode: "linear", tick0: 2, dtick: 2},
+            bar: {color: "black"},
+            steps: [
+                {range: [0, 1], color: "rgba(255, 255, 255, 0)"},
+                {range: [1, 2], color: "rgba(232, 226, 202, .5)"},
+                {range: [2, 3], color: "rgba(210, 206, 145, .5)"},
+                {range: [3, 4], color:  "rgba(202, 209, 95, .5)"},
+                {range: [4, 5], color:  "rgba(184, 205, 68, .5)"},
+                {range: [5, 6], color: "rgba(170, 202, 42, .5)"},
+                {range: [6, 7], color: "rgba(142, 178, 35 , .5)"},
+                {range: [7, 8], color:  "rgba(110, 154, 22, .5)"},
+                {range: [8, 9], color: "rgba(50, 143, 10, 0.5)"},
+                {range: [9, 10], color: "rgba(14, 127, 0, .5)"},
+            ]
+        } 
     };
-  
-    // let GAUGE = document.getElementById("gauge");
-    Plotly.newPlot("gauge", data, layout);
-  }
+
+    // Set up the Layout
+    let layout = {
+        width: 400, 
+        height: 400,
+        margin: {t: 0, b:0}
+    };
+
+    // Call Plotly to plot the gauge chart
+    Plotly.newPlot("gauge", [trace2], layout)
+
+};

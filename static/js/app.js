@@ -18,23 +18,23 @@ d3.json(url).then(function(data) {
 // Demographic Info panel, "div id=sample-metadata"
 function getMetaData(sample){
 
-        // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
-        let metadata = allData.metadata;
-        
-        // filter on sample "id" to sampleObj.id and store 1st array element in "result"
-        let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
-        let result = resultArray[0];
+  // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
+  let metadata = allData.metadata;
 
-        // iterate through result array items, then assign content of result into panelContent
-        let panelContent = d3.select("#sample-metadata");
-        panelContent.html("");
-        for (key in result){
-            panelContent.append("h6").text(`${key.toUpperCase()}: ${result[key]}`);
-        }
+  // filter on sample "id" to sampleObj.id and store 1st array element in "result"
+  let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+  let result = resultArray[0];
+
+  // iterate through result array items, then assign content of result into panelContent
+  let panelContent = d3.select("#sample-metadata");
+  panelContent.html("");
+  for (key in result){
+      panelContent.append("h6").text(`${key.toUpperCase()}: ${result[key]}`);
+  }
 
 } 
 
-
+// Build bar graph -- <div id="bar" class="js-plotly-plot">
 function buildCharts(sample){
 
   // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
@@ -43,41 +43,43 @@ function buildCharts(sample){
   // build chart info here
   let resultArray = samples.filter(sampleObj => sampleObj.id == sample);
   let result = resultArray[0];
-  let otuIds = result.otu_ids;
   let otuLabels = result.otu_labels;
+  let otuIds = result.otu_ids;
   let sampleValues = result.sample_values;
   let wfreq = result.wfreq
 
   // build bar chart
   yticks = otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse();
-  let barData = [
-      {
-          y : yticks,
-          x : sampleValues.slice(0,10).reverse(),
-          text : otuLabels.slice(0,10).reverse(),
-          type : "bar",
-          orientation : "h",
-      }
-  ];
 
   let barLayout = {
-      title: "Top 10 Operational Taxonomic Units",
-      margin : {t:30, l: 150}
-  };
+    title: "Top 10 Operational Taxonomic Units",
+    margin : {t:35, l: 150}
+};
+
+  let barData = [
+      {
+          type : "bar",
+          orientation : "h",
+          text : otuLabels.slice(0,10).reverse(),
+          x : sampleValues.slice(0,10).reverse(),
+          y : yticks,
+      }
+  ];
+  // Plot the bar graph here
   Plotly.newPlot("bar", barData, barLayout);
 
-  // bubble chart:
+  // Build bubble chart -- <div id="bubble" class="js-plotly-plot">
   let bubbleData = [
       {
-          x : otuIds,
-          y : sampleValues,
           text : otuLabels,
           mode : "markers",
           marker : {
               size : sampleValues,
               color : otuIds,
               colorscale : "Earth"
-          }
+          },
+          x : otuIds,
+          y : sampleValues
       }
   ]
 
@@ -88,16 +90,10 @@ function buildCharts(sample){
       xaxis : {title: "OTU IDs"},
       margin : {t:30}
   };
+  // Plot the bubble graph here
   Plotly.newPlot("bubble", bubbleData, bubbleLayout)
 }
 
-// get new sample data each time 
-function testSubject(newSample) {
-    
-  buildCharts(newSample);
-  getMetaData(newSample);
-  buildGauge(newSample);
-}
 
 function initDashboard(){
 
@@ -119,9 +115,17 @@ function initDashboard(){
         let firstSample = sampleNames[0];
         buildCharts(firstSample);
         getMetaData(firstSample);
-        buildGauge(firstSample);
+        buildGaugeChart(firstSample);
     });
 }
+
+// get new sample data each time 
+function testSubject(newSample) {
+
+  buildCharts(newSample);
+  getMetaData(newSample);
+  buildGaugeChart(newSample);
+  }
 
 // initialize dashboard
 initDashboard();
