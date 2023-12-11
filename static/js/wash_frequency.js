@@ -7,9 +7,8 @@ function buildGaugeChart(sample) {
     let metadata = allData.metadata;
 
     // Filter based on the value of the sample
-    let value = metadata.filter(result => result.id == sample);
-
     // Log the array of metadata objects after the have been filtered
+    let value = metadata.filter(result => result.id == sample);
     console.log(value)
 
     // Get the first index from the array
@@ -21,16 +20,16 @@ function buildGaugeChart(sample) {
     // Set up the trace for the gauge chart
     let trace2 = {
         value: washFrequency,
-        domain: {x: [0,1], y: [0,1]},
         title: {
             text: "<b>Belly Button Washing Frequency</b><br>Scrubs per Week",
-            font: {color: "black", size: 16}
+            font: {color: "black", size: 18}
         },
         type: "indicator",
         mode: "gauge+number",
+        domain: {x: [0,1], y: [0,1]},
         gauge: {
             axis: {range: [0,10], tickmode: "linear", tick0: 2, dtick: 2},
-            bar: {color: "black"},
+            bar: {color: "green"},
             steps: [
                 {range: [0, 1], color: "rgba(255, 255, 255, 0)"},
                 {range: [1, 2], color: "rgba(232, 226, 202, .5)"},
