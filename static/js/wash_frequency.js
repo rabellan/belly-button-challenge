@@ -15,7 +15,7 @@ function buildGaugeChart(sample) {
     // Get the first index from the array
     let valueData = value[0];
 
-    // Use Object.entries to get the key/value pairs and put into the demographics box on the page
+    // Find Wash Frequency by grabbing the 7th element of the array
     let washFrequency = Object.values(valueData)[6];
 
     // Set up the trace for the gauge chart

@@ -52,7 +52,7 @@ function buildCharts(sample){
     yticks = otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse();
 
     let barLayout = {
-    title: "Top 10 Operational Taxonomic Units",
+    title: "<b>Top 10 Operational Taxonomic Units</b>",
     margin : {t:35, l: 150}
     };
 
@@ -84,7 +84,7 @@ function buildCharts(sample){
     ]
 
     let bubbleLayout = {
-        title : "Operational Taxonomic Units per Sample",
+        title : "<b>Operational Taxonomic Units per Sample</b>",
         margin : {t:0},
         hovermode : "closest",
         xaxis : {title: "OTU IDs"},
