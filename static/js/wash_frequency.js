@@ -56,4 +56,4 @@ function buildGaugeChart(sample) {
     // Call Plotly to plot the gauge chart
     Plotly.newPlot("gauge", [trace2], layout)
 
-};
+    };
