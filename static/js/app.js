@@ -10,88 +10,88 @@ console.log("Data Promise: ", dataPromise);
 let allData;
 
 d3.json(url).then(function(data) {
-  console.log(data);
-  allData = data;
-  initDashboard();
+    console.log(data);
+    allData = data;
+    initDashboard();
 });
 
 // Demographic Info panel, "div id=sample-metadata"
 function getMetaData(sample){
 
-  // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
-  let metadata = allData.metadata;
+    // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
+    let metadata = allData.metadata;
 
-  // filter on sample "id" to sampleObj.id and store 1st array element in "result"
-  let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
-  let result = resultArray[0];
+    // filter on sample "id" to sampleObj.id and store 1st array element in "result"
+    let resultArray = metadata.filter(sampleObj => sampleObj.id == sample);
+    let result = resultArray[0];
 
-  // iterate through result array items, then assign content of result into panelContent
-  let panelContent = d3.select("#sample-metadata");
-  panelContent.html("");
-  for (key in result){
-      panelContent.append("h6").text(`${key.toUpperCase()}: ${result[key]}`);
-  }
+    // iterate through result array items, then assign content of result into panelContent
+    let panelContent = d3.select("#sample-metadata");
+    panelContent.html("");
+    for (key in result){
+        panelContent.append("h6").text(`${key.toUpperCase()}: ${result[key]}`);
+    }
 
 } 
 
-// Build bar graph -- <div id="bar" class="js-plotly-plot">
+// Build charts function
 function buildCharts(sample){
 
-  // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
-  let samples = allData.samples;
+    // grab metadata dict, example --> "0: {id: 940, ethnicity: 'Caucasian', gender: 'F', age: 24, location: 'Beaufort/NC', …} "
+    let samples = allData.samples;
 
-  // build chart info here
-  let resultArray = samples.filter(sampleObj => sampleObj.id == sample);
-  let result = resultArray[0];
-  let otuLabels = result.otu_labels;
-  let otuIds = result.otu_ids;
-  let sampleValues = result.sample_values;
-  let wfreq = result.wfreq
+    // build chart info here
+    let resultArray = samples.filter(sampleObj => sampleObj.id == sample);
+    let result = resultArray[0];
+    let otuLabels = result.otu_labels;
+    let otuIds = result.otu_ids;
+    let sampleValues = result.sample_values;
+    let wfreq = result.wfreq
 
-  // build bar chart
-  yticks = otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse();
+    // Build bar graph -- <div id="bar" class="js-plotly-plot">
+    yticks = otuIds.slice(0,10).map(otuID => `OTU ${otuID}`).reverse();
 
-  let barLayout = {
+    let barLayout = {
     title: "Top 10 Operational Taxonomic Units",
     margin : {t:35, l: 150}
-};
+    };
 
-  let barData = [
-      {
-          type : "bar",
-          orientation : "h",
-          text : otuLabels.slice(0,10).reverse(),
-          x : sampleValues.slice(0,10).reverse(),
-          y : yticks,
-      }
-  ];
-  // Plot the bar graph here
-  Plotly.newPlot("bar", barData, barLayout);
+    let barData = [
+        {
+            type : "bar",
+            orientation : "h",
+            text : otuLabels.slice(0,10).reverse(),
+            x : sampleValues.slice(0,10).reverse(),
+            y : yticks,
+        }
+    ];
+    // Plot the bar graph here
+    Plotly.newPlot("bar", barData, barLayout);
 
-  // Build bubble chart -- <div id="bubble" class="js-plotly-plot">
-  let bubbleData = [
-      {
-          text : otuLabels,
-          mode : "markers",
-          marker : {
-              size : sampleValues,
-              color : otuIds,
-              colorscale : "Earth"
-          },
-          x : otuIds,
-          y : sampleValues
-      }
-  ]
+    // Build bubble chart -- <div id="bubble" class="js-plotly-plot">
+    let bubbleData = [
+        {
+            text : otuLabels,
+            mode : "markers",
+            marker : {
+                size : sampleValues,
+                color : otuIds,
+                colorscale : "Earth"
+            },
+            x : otuIds,
+            y : sampleValues
+        }
+    ]
 
-  let bubbleLayout = {
-      title : "Operational Taxonomic Units per Sample",
-      margin : {t:0},
-      hovermode : "closest",
-      xaxis : {title: "OTU IDs"},
-      margin : {t:30}
-  };
-  // Plot the bubble graph here
-  Plotly.newPlot("bubble", bubbleData, bubbleLayout)
+    let bubbleLayout = {
+        title : "Operational Taxonomic Units per Sample",
+        margin : {t:0},
+        hovermode : "closest",
+        xaxis : {title: "OTU IDs"},
+        margin : {t:30}
+    };
+    // Plot the bubble graph here
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout)
 }
 
 
@@ -122,10 +122,11 @@ function initDashboard(){
 // get new sample data each time 
 function testSubject(newSample) {
 
-  buildCharts(newSample);
-  getMetaData(newSample);
-  buildGaugeChart(newSample);
-  }
+    buildCharts(newSample);
+    getMetaData(newSample);
+    buildGaugeChart(newSample);
+
+}
 
 // initialize dashboard
 initDashboard();
