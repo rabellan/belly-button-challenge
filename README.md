@@ -5,6 +5,8 @@ This is an interactive dashboard to explore the [Belly Buton Biodiversity datase
 
 The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
 
+This project uses [D3 Javascript Library](https://d3js.org/) for the dynamic and interactive data visualizations and data from [https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json](https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1.1/14-Interactive-Web-Visualizations/02-Homework/samples.json)
+
 ### Resources
 1. [index.html](https://github.com/rabellan/belly-button-challenge/blob/main/index.html) - web application's main html page
 
