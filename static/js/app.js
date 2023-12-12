@@ -94,17 +94,14 @@ function buildCharts(sample){
     Plotly.newPlot("bubble", bubbleData, bubbleLayout)
 }
 
-
 function initDashboard(){
 
-    // initialize drop down with a default sample value
-
+    // initialize drop down with a default sample
     let selector = d3.select("#selDataset");
     d3.json(url).then((data) => {
         let sampleNames = data.names;
 
         // loop through names and add to selector
-
         for (let i = 0; i < sampleNames.length; i++){
 
             selector
